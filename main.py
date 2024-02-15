@@ -8,13 +8,8 @@ import os
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-# Kunci rahasia untuk sesi (gantilah dengan nilai yang lebih aman)
 app.secret_key = 'SvngFox'
 
-# Variabel global untuk menyimpan waktu terakhir exp ditingkatkan
-last_exp_increase = datetime.now()
-
-# Tentukan folder tempat menyimpan foto profil
 UPLOAD_FOLDER = 'static/profile_pics/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -32,9 +27,10 @@ def create_table():
             exp INTEGER,
             coins INTEGER DEFAULT 0,
             rank INTEGER DEFAULT 1,
-            title TEXT DEFAULT 'Newbie',  -- Default title untuk peringkat 1
+            title TEXT DEFAULT 'Newbie',
             profile_pic TEXT DEFAULT NULL,
-            redeemed_codes TEXT DEFAULT NULL
+            redeemed_codes TEXT DEFAULT NULL,
+            last_check_in DATETIME DEFAULT NULL
         )
     ''')
     conn.commit()
@@ -59,17 +55,52 @@ def get_title_by_rank(rank):
         10: 'Emperor',
         11: 'Leluhur',
         12: 'Pencerahan Surgawi',
-        # Menambahkan title untuk setiap peringkat setelah peringkat 12
         13: 'Human Immortal',
         14: 'Earth Immortal',
         15: 'Golden Immortal',
         16: 'Immortal Surgawi',
         17: 'Demigod',
         18: 'God'
-        # Dan seterusnya sesuai kebutuhan
     }
 
     return titles.get(rank, 'Unknown Title')
+
+CHECK_IN_INTERVAL = 24 * 60 * 60
+
+@app.route('/daily_check_in')
+def daily_check_in():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        last_check_in_time = get_last_check_in_time(user_id)
+        current_time = datetime.now()
+
+        last_check_in_time = datetime.strptime(last_check_in_time, "%Y-%m-%d %H:%M:%S")
+
+        if last_check_in_time and current_time - last_check_in_time < timedelta(seconds=CHECK_IN_INTERVAL):
+            flash('Anda sudah melakukan check-in dalam 24 jam terakhir.', 'info')
+        else:
+            give_daily_rewards(user_id)
+            flash('Anda telah berhasil melakukan check-in harian! Anda mendapatkan 10 exp dan 10 koin.', 'success')
+
+        return redirect(url_for('profile'))
+    else:
+        flash('Anda perlu masuk terlebih dahulu.', 'error')
+        return redirect(url_for('login'))
+
+def get_last_check_in_time(user_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT last_check_in FROM registrations WHERE id = ?', (user_id,))
+    last_check_in_time = cursor.fetchone()
+    conn.close()
+    return last_check_in_time[0] if last_check_in_time else None
+
+def give_daily_rewards(user_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE registrations SET exp = exp + 10, coins = coins + 10, last_check_in = ? WHERE id = ?', (datetime.now(), user_id))
+    conn.commit()
+    conn.close()
 
 @app.route('/')
 def home():
