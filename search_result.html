@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+</head>
+<body>
+    <h1>Search Result</h1>
+    <p>User Details:</p>
+    <ul>
+        <li><strong>ID:</strong> {{ user[0] }}</li>
+        <li><strong>Name:</strong> {{ user[1] }}</li>
+        <li><strong>Level:</strong> {{ user[3] }}</li>
+        <li><strong>Experience (Exp):</strong> {{ user[4] }}</li>
+        <li><strong>Coins:</strong> {{ user[5] }}</li>
+      <li><strong>Rank:</strong> {{ user[6] }}</li>
+      <li><strong>Title:</strong> {{ user[7] }}</li>
+    </ul>
+    <a href="{{ url_for('profile') }}">Back to Profile</a>
+</body>
+</html>

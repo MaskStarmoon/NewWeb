@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Check-in</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Tambahkan stylesheet kustom Anda di sini -->
+    <style>
+        /* Gaya kustom di sini */
+        /* Misalnya, menyesuaikan tata letak, warna, dll */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Daily Check-in</h1>
+        <hr>
+        <p>Anda dapat melakukan check-in harian di sini. Setelah melakukan check-in, Anda akan menerima hadiah 10 exp dan 10 koin.</p>
+        <!-- Tambahkan formulir untuk daily check-in -->
+        <form action="{{ url_for('daily_check_in') }}" method="GET">
+            <button type="submit" class="btn btn-primary">Check-in Sekarang</button>
+        </form>
+        <hr>
+        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Kembali ke Profil</a>
+    </div>
+</body>
+</html>

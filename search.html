@@ -1,0 +1,20 @@
+<!-- templates/search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search User</title>
+</head>
+<body>
+    <h1>Search User</h1>
+      <!-- search.html -->
+
+      <form action="{{ url_for('search_user_post') }}" method="post">
+          <label for="user_id">User ID:</label>
+          <input type="text" name="user_id" id="user_id">
+          <input type="submit" value="Search">
+    </form>
+</body>
+</html>

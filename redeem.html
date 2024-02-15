@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem</title>
+</head>
+<body>
+    <h1>Redeem Your Reward</h1>
+    <form action="{{ url_for('redeem') }}" method="POST">
+        <label for="redeem_code">Enter Redeem Code:</label><br>
+        <input type="text" id="redeem_code" name="redeem_code"><br><br>
+        <input type="submit" value="Redeem">
+    </form>
+</body>
+</html>
